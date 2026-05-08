@@ -1,4 +1,5 @@
 import logging
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -70,7 +71,12 @@ def process_data_pipeline(df_train, df_test):
             LOGGER.info("   Column '%s': Filled %s missing with Median (%s)", col, missing_count, median_val)
             all_data[col] = all_data[col].fillna(median_val)
 
-    cat_cols = all_data.select_dtypes(include=['object', 'str']).columns
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified.*",
+        )
+        cat_cols = all_data.select_dtypes(include=['object']).columns
     for col in cat_cols:
         mode_series = X_train_temp[col].mode(dropna=True)
         mode_val = mode_series.iloc[0] if not mode_series.empty else CAT_FALLBACK_VALUE
