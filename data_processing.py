@@ -78,11 +78,10 @@ def process_data_pipeline(df_train, df_test):
         )
         cat_cols = all_data.select_dtypes(include=['object']).columns
     for col in cat_cols:
-        mode_series = X_train_temp[col].mode(dropna=True)
-        mode_val = mode_series.iloc[0] if not mode_series.empty else CAT_FALLBACK_VALUE
-
         missing_count = all_data[col].isnull().sum()
         if missing_count > 0:
+            mode_series = X_train_temp[col].mode(dropna=True)
+            mode_val = mode_series.iloc[0] if not mode_series.empty else CAT_FALLBACK_VALUE
             if mode_series.empty:
                 LOGGER.warning(
                     "   Column '%s': Mode is empty (all NaN in train). Filled %s missing with fallback '%s'",
