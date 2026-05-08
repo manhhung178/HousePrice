@@ -314,7 +314,7 @@ def main():
 
         def on_click(event):
             plt.close(fig1)
-            plot_perfect_fit_dashboard(y_valid_orig, y_valid_log, models_data_full, best_name)
+            fig2 = plot_perfect_fit_dashboard(y_valid_orig, y_valid_log, models_data_full, best_name)
             plt.show()
 
         button.on_clicked(on_click)
